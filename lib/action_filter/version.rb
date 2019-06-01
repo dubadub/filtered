@@ -1,0 +1,3 @@
+module ActionFilter
+  VERSION = "0.1.0"
+end
