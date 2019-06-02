@@ -21,13 +21,37 @@ RSpec.describe "Integration with ActiveRecord" do
     end
   end
 
-  it "filters parents" do
-    class MyFilter < ActionFilter::Base
+  let(:filter_class) do
+    Class.new(ActionFilter::Base) do
       field :status
-    end
 
-    filter = MyFilter.new(status: "pending")
+      field :has_children, if: ->(value) { !!value } do |value|
+        -> { joins(:children) }
+      end
+    end
+  end
+
+  it "doesn't modify query if filter has no values" do
+    filter = filter_class.new({})
+
+    expect(Parent.all.merge(filter).to_sql).to eq("SELECT \"parents\".* FROM \"parents\"")
+  end
+
+  it "adds where statement to query when field defined with default settings" do
+    filter = filter_class.new(status: "pending")
 
     expect(Parent.all.merge(filter).to_sql).to eq("SELECT \"parents\".* FROM \"parents\" WHERE \"parents\".\"status\" = 'pending'")
+  end
+
+  it "adds condition for children if value is truthy" do
+    filter = filter_class.new(status: "pending", has_children: true)
+
+    expect(Parent.all.merge(filter).to_sql).to eq("SELECT \"parents\".* FROM \"parents\" INNER JOIN \"children\" ON \"children\".\"parent_id\" = \"parents\".\"id\" WHERE \"parents\".\"status\" = 'pending'")
+  end
+
+  it "doesn't adds condition for children if value is falsey" do
+    filter = filter_class.new(has_children: false)
+
+    expect(Parent.all.merge(filter).to_sql).to eq("SELECT \"parents\".* FROM \"parents\"")
   end
 end
