@@ -1,6 +1,11 @@
 require "bundler/setup"
 require "action_filter"
 
+require "rubygems"
+require "bundler/setup"
+
+Bundler.require
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
