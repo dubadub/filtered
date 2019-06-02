@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/dubadub/filtered.svg?branch=master)](https://travis-ci.org/dubadub/filtered)
+
+[![Maintainability](https://api.codeclimate.com/v1/badges/58e6805e1616fd68be56/maintainability)](https://codeclimate.com/github/dubadub/filtered/maintainability)
+
 # Filtered
 
 Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/filtered`. To experiment with that code, run `bin/console` for an interactive prompt.
