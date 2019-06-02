@@ -62,7 +62,7 @@ appraise "activerecord-4.2" do
   gem "activerecord", "~>4.2", require: "active_record"
 
   gemfile.platforms :jruby do
-    gem "activerecord-jdbcsqlite3-adapter"
+    gem "activerecord-jdbcsqlite3-adapter", "~>1.3"
     gem "jdbc-sqlite3"
     gem "jdbc-postgres"
   end
@@ -77,7 +77,7 @@ appraise "activerecord-4.1" do
   gem "activerecord", "~>4.1", require: "active_record"
 
   gemfile.platforms :jruby do
-    gem "activerecord-jdbcsqlite3-adapter"
+    gem "activerecord-jdbcsqlite3-adapter", "~>1.3"
     gem "jdbc-sqlite3"
     gem "jdbc-postgres"
   end
@@ -92,7 +92,7 @@ appraise "activerecord-4.0" do
   gem "activerecord", "~>4.0", require: "active_record"
 
   gemfile.platforms :jruby do
-    gem "activerecord-jdbcsqlite3-adapter"
+    gem "activerecord-jdbcsqlite3-adapter", "~>1.3"
     gem "jdbc-sqlite3"
     gem "jdbc-postgres"
   end
