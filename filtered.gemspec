@@ -1,16 +1,16 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "action_filter/version"
+require "filtered/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "action_filter"
-  spec.version       = ActionFilter::VERSION
+  spec.name          = "filtered"
+  spec.version       = Filtered::VERSION
   spec.authors       = ["Alexey Dubovskoy"]
   spec.email         = ["dubovskoy.a@gmail.com"]
 
   spec.summary       = %q{Filters ActiveRecord queries in a contoller}
-  spec.homepage      = "https://github.com/dubadub/active_filter"
+  spec.homepage      = "https://github.com/dubadub/filtered"
   spec.license       = "MIT"
 
   # Specify which files should be added to the gem when it is released.

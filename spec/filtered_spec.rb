@@ -1,15 +1,15 @@
-RSpec.describe ActionFilter do
+RSpec.describe Filtered do
   it "has a version number" do
-    expect(ActionFilter::VERSION).not_to be nil
+    expect(Filtered::VERSION).not_to be nil
   end
 
   describe "DSL" do
     it "doesn't clash with other class" do
-      class FilterOne < ActionFilter::Base
+      class FilterOne < Filtered::Base
         field :status
       end
 
-      class FilterTwo < ActionFilter::Base
+      class FilterTwo < Filtered::Base
         field :reason
       end
 
@@ -21,7 +21,7 @@ RSpec.describe ActionFilter do
     end
 
     it "blows up when setting field which is not defined" do
-      class MyFilter < ActionFilter::Base
+      class MyFilter < Filtered::Base
         field :status
       end
 
@@ -31,7 +31,7 @@ RSpec.describe ActionFilter do
     describe "field" do
       context "without parameters" do
         it "works with value present" do
-          class MyFilter < ActionFilter::Base
+          class MyFilter < Filtered::Base
             field :status
           end
 
@@ -41,7 +41,7 @@ RSpec.describe ActionFilter do
         end
 
         it "works when no value present" do
-          class MyFilter < ActionFilter::Base
+          class MyFilter < Filtered::Base
             field :status
           end
 
@@ -53,7 +53,7 @@ RSpec.describe ActionFilter do
 
       context "with block parameter" do
         it "works" do
-          class MyFilter < ActionFilter::Base
+          class MyFilter < Filtered::Base
             field :status do |value|
               -> { where(status: value) }
             end
@@ -65,7 +65,7 @@ RSpec.describe ActionFilter do
         end
 
         it "gives access to filter instance" do
-          class MyFilter < ActionFilter::Base
+          class MyFilter < Filtered::Base
             field :status do |value, filter|
               -> { where(status: filter.prefixed(value)) }
             end
@@ -82,7 +82,7 @@ RSpec.describe ActionFilter do
 
         xit "raises an error if field definition doesn't return lambda" do
           expect {
-            class MyFilter < ActionFilter::Base
+            class MyFilter < Filtered::Base
               field :status do |value|
                 "hello"
               end
@@ -95,7 +95,7 @@ RSpec.describe ActionFilter do
       context "field options" do
         describe "if: ..." do
           xit "supports 'if: :method_name'" do
-            class MyFilter < ActionFilter::Base
+            class MyFilter < Filtered::Base
               field :status, if: :use_field?
 
               def use_field?
@@ -109,7 +109,7 @@ RSpec.describe ActionFilter do
           end
 
           xit "supports 'unless: :method_name'" do
-            class MyFilter < ActionFilter::Base
+            class MyFilter < Filtered::Base
               field :status, unless: :skip_field?
 
               def skip_field?
@@ -123,7 +123,7 @@ RSpec.describe ActionFilter do
           end
 
           it "supports 'if: ->() {...}'" do
-            class MyFilter < ActionFilter::Base
+            class MyFilter < Filtered::Base
               field :status, if: ->(value) { false }
             end
 
@@ -133,7 +133,7 @@ RSpec.describe ActionFilter do
           end
 
           it "supports 'if: ->() {...}'" do
-            class MyFilter < ActionFilter::Base
+            class MyFilter < Filtered::Base
               field :status, if: ->(value) { true }
             end
 
@@ -146,7 +146,7 @@ RSpec.describe ActionFilter do
 
         describe "allow_blank: ..." do
           xit "supports 'allow_blank: true'" do
-            class MyFilter < ActionFilter::Base
+            class MyFilter < Filtered::Base
               field :status, allow_blank: true
             end
 

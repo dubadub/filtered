@@ -1,3 +1,3 @@
-module ActionFilter
+module Filtered
   VERSION = "0.1.0"
 end

@@ -1,5 +1,5 @@
 require "bundler/setup"
-require "action_filter"
+require "filtered"
 
 require "rubygems"
 require "bundler/setup"
@@ -9,6 +9,7 @@ Bundler.require
 # Add support to load paths
 $LOAD_PATH.unshift File.expand_path("support", __dir__)
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

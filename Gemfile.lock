@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    action_filter (0.1.0)
+    filtered (0.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -31,7 +31,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  action_filter!
+  filtered!
   appraisal (~> 2.2)
   bundler (~> 2.0)
   rake (~> 10.0)

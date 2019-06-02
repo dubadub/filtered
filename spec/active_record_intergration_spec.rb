@@ -22,7 +22,7 @@ RSpec.describe "Integration with ActiveRecord" do
   end
 
   let(:filter_class) do
-    Class.new(ActionFilter::Base) do
+    Class.new(Filtered::Base) do
       field :status
 
       field :has_children, if: ->(value) { !!value } do |value|

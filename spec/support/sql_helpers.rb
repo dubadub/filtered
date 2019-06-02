@@ -29,11 +29,11 @@ module SQLHelpers
     ActiveRecord::Base.establish_connection(adapter: "postgresql", host: "localhost",
                                             database: "postgres", schema_search_path: "public")
 
-    ActiveRecord::Base.connection.drop_database("action_filter_postgresql_spec")
-    ActiveRecord::Base.connection.create_database("action_filter_postgresql_spec",
+    ActiveRecord::Base.connection.drop_database("filtered_postgresql_spec")
+    ActiveRecord::Base.connection.create_database("filtered_postgresql_spec",
                                                    encoding: "utf-8", adapter: "postgresql")
 
     ActiveRecord::Base.establish_connection(adapter: "postgresql", host: "localhost",
-                                            database: "action_filter_postgresql_spec")
+                                            database: "filtered_postgresql_spec")
   end
 end

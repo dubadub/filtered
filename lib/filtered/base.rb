@@ -1,4 +1,4 @@
-module ActionFilter
+module Filtered
   class Base
 
     def self.inherited(base)

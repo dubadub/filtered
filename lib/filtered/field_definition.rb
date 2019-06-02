@@ -1,4 +1,4 @@
-module ActionFilter
+module Filtered
   class FieldDefinition
 
     attr_writer :query_update_proc, :accept_if
