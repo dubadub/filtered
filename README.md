@@ -4,7 +4,7 @@
 WORK IN PROGRESS
 
 
-# Filtered - Easy to use gem to filter ActiveRecord queries by user input in Rails
+# Filtered - easily add filter to ActiveRecord queries
 
 Have you ever been overwhelmed by the need to filter ActiveRecord relation in a way which doesn't align with ActiveRecord notation? In particular, use fields which aren't columns or scopes. Do you remember that feeling when you need to display filter values in a form on a page and then parse all these parameters back? Me too. That's it.
 
