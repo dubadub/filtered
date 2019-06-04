@@ -1,7 +1,10 @@
 [![Build Status](https://travis-ci.org/dubadub/filtered.svg?branch=master)](https://travis-ci.org/dubadub/filtered)
 [![Maintainability](https://api.codeclimate.com/v1/badges/58e6805e1616fd68be56/maintainability)](https://codeclimate.com/github/dubadub/filtered/maintainability)
 
-# Filtered
+WORK IN PROGRESS
+
+
+# Filtered - Easy to use gem to filter ActiveRecord queries by user input in Rails
 
 Have you ever been overwhelmed by the need to filter ActiveRecord relation in a way which doesn't align with ActiveRecord notation? In particular, use fields which aren't columns or scopes. Do you remember that feeling when you need to display filter values in a form on a page and then parse all these parameters back? Me too. That's it.
 
@@ -86,7 +89,7 @@ class CarFilter < ApplicationFilter
   field :year
 
 
-  # Or you can fuylly control how Filtered modifies query with a block.
+  # Or you can fully control how Filtered modifies query with a block.
   # Notice that block returns lambda. That's because we want to postpone
   # it's evaluation and let ActiveRecord do that when required.
 
@@ -166,31 +169,31 @@ Use the same `@filter` object in views, it will set all inputs values in a form:
 
   = form_for(@filter, url: search_path, method: "GET", as: :filter) do |f|
     .fields
-      strong Year
+      span Year
       - YEARS.each do |year|
         = year
         = f.check_box :year, { multiple: true }, year, nil
 
     .fields
-      strong Body
+      span Body
       - BODIES.each do |body|
 				= body
         = f.check_box :body, { multiple: true }, body, nil
 
     .fields
-      strong Make
+      span Make
       - MAKES.each do |make|
         = make
         = f.check_box :make, { multiple: true }, make, nil
 
     .fields
-      strong Sorting
+      span Sorting
 
-			span Year
+	  span Year
       = f.radio_button :ordering, "year asc"
       = f.radio_button :ordering, "year desc"
 
-			span Idle
+	  span Idle
       = f.radio_button :ordering, "noise_idle asc"
       = f.radio_button :ordering, "noise_idle desc"
       span 50
