@@ -22,6 +22,11 @@ module Filtered
         end
 
         field_definitions[field_name] = field_definition
+
+
+        define_method field_name do
+          fields[field_name]
+        end
       end
 
       def base.field_definitions

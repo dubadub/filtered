@@ -31,9 +31,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  filtered!
   appraisal (~> 2.2)
   bundler (~> 2.0)
+  filtered!
   rake (~> 10.0)
   rspec (~> 3.0)
 

@@ -1,0 +1,15 @@
+Description:
+    Stubs out a new filter. Pass the filter name, either CamelCased or
+    under_scored, and an optional list of fields as arguments.
+
+    You don't have to think up every field up front, but it helps to
+    sketch out a few so you can start working with the filter immediately.
+
+    To create a filter within a module, specify the filter name as a
+    path like 'parent_module/filter_name'.
+
+Example:
+    `rails generate filter users group persmission`
+
+    Users filter.
+        Filter:     app/filters/users_filter.rb
