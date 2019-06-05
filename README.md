@@ -28,7 +28,7 @@ And then execute:
 
     # Generate a base filter class
     $ rails generate filtered:install
-      create app/filters/application_filter.rb
+          create app/filters/application_filter.rb
 ```
 
 ## Usage
@@ -37,7 +37,7 @@ Create a new filter by running:
 
 ```bash
     $ rails generate filter car make model year body # fields are optional
-        create app/filiters/car_filter.rb
+          create app/filiters/car_filter.rb
 ```
 
 
@@ -56,10 +56,9 @@ class NoiseMeasurementsController < ApplicationController
   private
 
   def set_filter
-    # it can take an optional block as well
-    # if you need for example to set value of an auxilary variable:
+    # it can take an optional block if you need to set an auxilary variable:
     @filter = CarsFilter.new(filter_params) do |f|
-        f.user = current_user
+      f.user = current_user
     end
   end
 
