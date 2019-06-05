@@ -54,9 +54,7 @@ module Filtered
     end
 
     def to_proc
-      merge_procs = []
-
-      fields.each do |name, value, definition|
+      procs = fields.inject([]) do |memo, (name, value, definition)|
 
         if definition.accepts_value?(value)
           lambda = definition.to_proc
@@ -67,19 +65,27 @@ module Filtered
             lambda.call(value)
           end
 
-          merge_procs << value
+          memo << value
         end
+
+        memo
       end
 
       ->() {
         # AR
         # self is ActiveRecord relation
-        merge_procs.inject(self) { |chain, merge_proc| chain.merge(merge_proc) }
+        procs.inject(self) { |chain, merge_proc| chain.merge(merge_proc) }
       }
     end
 
     def to_hash
       Hash[fields.map{|name, value, definition| definition.accepts_value?(value) ? [name, value] : next }.compact]
+    end
+
+    def inspect
+      inspection = fields.collect { |name, value| "#{name}: #{value.inspect}" }.compact.join(", ")
+
+      "#<#{self.class} #{inspection}>"
     end
 
   end
