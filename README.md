@@ -25,6 +25,7 @@ And then execute:
 ```bash
     # Download and install the gem
     $ bundle
+
     # Generate a base filter class
     $ rails generate filtered:install
       create app/filters/application_filter.rb
@@ -55,7 +56,8 @@ class NoiseMeasurementsController < ApplicationController
   private
 
   def set_filter
-    # it can take an optional block as well if you need for example to set value of an auxilary variable:
+    # it can take an optional block as well
+    # if you need for example to set value of an auxilary variable:
     @filter = CarsFilter.new(filter_params) do |f|
         f.user = current_user
     end
@@ -87,7 +89,8 @@ class CarFilter < ApplicationFilter
   # Notice that block returns lambda. That's because we want to postpone
   # it's evaluation and let ActiveRecord do that when required.
 
-  # It will add `.joins(:specification).merge(Car::Specification.where(year: ["2010", "2011"]))` clause to query.
+  # It will add `.joins(:specification).merge(Car::Specification.where(year: ["2010", "2011"]))`
+  # clause to the query.
   field :year do |year|
     -> { joins(:specification).merge(Car::Specification.where(year: year)) }
   end
