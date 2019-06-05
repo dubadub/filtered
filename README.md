@@ -17,17 +17,16 @@ It gives freedom of using any names, any columns or associations behind these na
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'filtered'
+gem "filtered"
 ```
 
 And then execute:
 
 ```bash
-    # Download and install gem
+    # Download and install the gem
     $ bundle
-    # Generate base filter class
+    # Generate a base filter class
     $ rails generate filtered:install
-      create app/filters
       create app/filters/application_filter.rb
 ```
 
@@ -36,10 +35,9 @@ And then execute:
 Create a new filter by running:
 
 ```bash
-    $ rails generate filtered:filter car make model year body # fields are optional
-        create app/filiters/user_filter.rb
+    $ rails generate filter car make model year body # fields are optional
+        create app/filiters/car_filter.rb
 ```
-
 
 
 This is how you can use that filter in a controller:
@@ -51,20 +49,16 @@ class NoiseMeasurementsController < ApplicationController
   before_action :set_filter
 
   def index
-    # add `@filter` object as an argument to `merge`
-    @measurements = CarNoiseMeasurement.all.merge(@filter).page(params[:page])
+    @measurements = CarNoiseMeasurement.all.merge(@filter)
   end
 
   private
 
   def set_filter
-    @filter = CarFilter.new(filter_params)
-    # it can take a block as well if you need for example to set value of auxilary variable:
-    #
-    #   @filter = CarsFilter.new(filter_params) do |f|
-    #			f.user = current_user
-    #   end
-    #
+    # it can take an optional block as well if you need for example to set value of an auxilary variable:
+    @filter = CarsFilter.new(filter_params) do |f|
+        f.user = current_user
+    end
   end
 
   def filter_params
@@ -119,7 +113,7 @@ class CarFilter < ApplicationFilter
   # `if` and `unless` will switch filter on or off based on value or filter.
   # it can accept lambda with value as argument:
   field :year, if: -> (value) { %w(2018 2019).include?(value) }
-	# or value and filter as argument:
+  # or value and filter as argument:
   field :year, if: -> (value, filter) { filter.user.present? && %w(2018 2019).include?(value) }
   # or method name. it will pass value as an argument
   field :year, if: :year_applicable?
@@ -160,8 +154,6 @@ end
 
 ```
 
-For full reference see [documentation](https://github.com/dubadub/filtered/blob/master/docs) and [examples](https://github.com/dubadub/filtered/blob/master/examples).
-
 Use the same `@filter` object in views, it will set all inputs values in a form:
 
 ```
@@ -177,7 +169,7 @@ Use the same `@filter` object in views, it will set all inputs values in a form:
     .fields
       span Body
       - BODIES.each do |body|
-				= body
+        = body
         = f.check_box :body, { multiple: true }, body, nil
 
     .fields
@@ -189,11 +181,11 @@ Use the same `@filter` object in views, it will set all inputs values in a form:
     .fields
       span Sorting
 
-	  span Year
+    span Year
       = f.radio_button :ordering, "year asc"
       = f.radio_button :ordering, "year desc"
 
-	  span Idle
+    span Idle
       = f.radio_button :ordering, "noise_idle asc"
       = f.radio_button :ordering, "noise_idle desc"
       span 50
