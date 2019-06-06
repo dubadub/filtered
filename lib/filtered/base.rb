@@ -194,18 +194,7 @@ module Filtered
     # ActiveRecord calls to_proc when filter merged into relation.
     def to_proc
       procs = entitled_fields.inject([]) do |memo, (name, value, definition)|
-
-        r = if (l = definition.query_updater).arity == 2
-          l.call(value, self)
-        elsif l.arity == 1
-          l.call(value)
-        elsif l.arity == 0
-          l.call()
-        else
-          raise Error, "Unsupported number of arguments for #{definition}"
-        end
-
-        memo << r
+        memo << eval_option_proc(definition.query_updater, value)
 
         memo
       end
@@ -234,31 +223,26 @@ module Filtered
       fields.each do |name, value, definition|
         value = definition.default_computer.(self) if !value && definition.default_computer
 
-        value_accepted = if (l = definition.acceptance_computer).arity == 2
-          l.call(value, self)
-        elsif l.arity == 1
-          l.call(value)
-        elsif l.arity == 0
-          l.call()
-        else
-          raise Error, "Unsupported number of arguments for 'if' in #{definition}"
-        end
-
-        value_declined = if (l = definition.decline_computer).arity == 2
-          l.call(value, self)
-        elsif l.arity == 1
-          l.call(value)
-        elsif l.arity == 0
-          l.call()
-        else
-          raise Error, "Unsupported number of arguments for 'unless' #{definition}"
-        end
+        value_accepted = eval_option_proc(definition.acceptance_computer, value)
+        value_declined = eval_option_proc(definition.decline_computer, value)
 
         if value_accepted && !value_declined
           yield name, value, definition
         else
           next
         end
+      end
+    end
+
+    def eval_option_proc(proc_, value)
+      if proc_.arity == 2
+        proc_.call(value, self)
+      elsif proc_.arity == 1
+        proc_.call(value)
+      elsif proc_.arity == 0
+        proc_.call()
+      else
+        raise Error, "Unsupported number of arguments for proc"
       end
     end
 
