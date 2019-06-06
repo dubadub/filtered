@@ -73,10 +73,12 @@ module Filtered
           ->(value) { -> { where(field_name => value) } }
         end
 
+        raise Error, "'if' can't be used with 'allow_nil' or 'allow_blank'" if options[:if] && (options[:allow_nil] || options[:allow_blank])
+
         field_definition.acceptance_computer = if options[:if]
           options[:if]
         else
-          ->(value) { !value.nil? && value != "" }
+          ->(value) { (options[:allow_nil] || !value.nil?) && (options[:allow_blank] || value != "") }
         end
 
         field_definition.default_computer = if options[:default].is_a?(Proc)

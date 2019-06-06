@@ -145,14 +145,30 @@ RSpec.describe Filtered do
 
 
         describe "allow_blank: ..." do
-          xit "supports 'allow_blank: true'" do
-            class MyFilter < Filtered::Base
-              field :status, allow_blank: true
+          context "when 'allow_blank: true'" do
+            it "allows blank values in query" do
+              class MyFilter < Filtered::Base
+                field :status, allow_blank: true
+              end
+
+              filter = MyFilter.new(status: "")
+
+              expect(filter.to_hash).to eq(status: "")
             end
+          end
+        end
 
-            filter = MyFilter.new(status: "")
+        describe "allow_nil: ..." do
+          context "when 'allow_nil: true'" do
+            it "allows nil values in query" do
+              class MyFilter < Filtered::Base
+                field :status, allow_nil: true
+              end
 
-            expect(filter.to_hash).to eq(status: "")
+              filter = MyFilter.new(status: nil)
+
+              expect(filter.to_hash).to eq(status: nil)
+            end
           end
         end
 
