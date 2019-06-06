@@ -94,16 +94,30 @@ RSpec.describe Filtered do
 
       context "field options" do
         describe "if: ..." do
-          xit "supports 'if: :method_name'" do
-            class MyFilter < Filtered::Base
+          it "supports 'if: :method_name'" do
+            class MyIfFilter < Filtered::Base
               field :status, if: :use_field?
 
-              def use_field?
-                false
+              def use_field?(value)
+                value == "pending"
               end
             end
 
-            filter = MyFilter.new(status: "pending")
+            filter = MyIfFilter.new(status: "pending")
+
+            expect(filter).to have_filter_value(status: "pending")
+          end
+
+          it "supports 'if: :method_name'" do
+            class MyIfFilter < Filtered::Base
+              field :status, if: :use_field?
+
+              def use_field?(value)
+                value != "pending"
+              end
+            end
+
+            filter = MyIfFilter.new(status: "pending")
 
             expect(filter).to have_filter_value({})
           end
@@ -124,7 +138,7 @@ RSpec.describe Filtered do
 
           it "supports 'if: ->() {...}'" do
             class MyFilter < Filtered::Base
-              field :status, if: ->(value) { false }
+              field :status, if: ->() { false }
             end
 
             filter = MyFilter.new(status: "pending")
@@ -134,7 +148,27 @@ RSpec.describe Filtered do
 
           it "supports 'if: ->() {...}'" do
             class MyFilter < Filtered::Base
-              field :status, if: ->(value) { true }
+              field :status, if: ->() { true }
+            end
+
+            filter = MyFilter.new(status: "pending")
+
+            expect(filter).to have_filter_value(status: "pending")
+          end
+
+          it "supports 'if: ->(value) {...}'" do
+            class MyFilter < Filtered::Base
+              field :status, if: ->(value) { !value }
+            end
+
+            filter = MyFilter.new(status: "pending")
+
+            expect(filter).to have_filter_value({})
+          end
+
+          it "supports 'if: ->(value) {...}'" do
+            class MyFilter < Filtered::Base
+              field :status, if: ->(value) { value }
             end
 
             filter = MyFilter.new(status: "pending")

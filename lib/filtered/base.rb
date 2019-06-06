@@ -52,41 +52,49 @@ module Filtered
       #   It will be called only if the field not passed into filter constructor.
       # * <tt>:allow_nil</tt> - Add the field into query if field value is +nil+.
       # * <tt>:allow_blank</tt> - Add the field into query if the value is blank.
-      # * <tt>:if</tt> - Specifies a method, proc or string to call to determine
+      # * <tt>:if</tt> - Specifies a method or proc to call to determine
       #   if the field addition to query should occur (e.g. <tt>if: :allow_year</tt>,
       #   or <tt>if: Proc.new { |year| %w(2018 2019).include?(year) }</tt>). The method,
-      #   proc or string should return or evaluate to a +true+ or +false+ value.
-      # * <tt>:unless</tt> - Specifies a method, proc or string to call to determine
+      #   or proc should return a +true+ or +false+ value.
+      # * <tt>:unless</tt> - Specifies a method or proc to call to determine
       #   if the field addition to query should not occur (e.g. <tt>if: :allow_year</tt>,
       #   or <tt>if: Proc.new { |year| (1999..2005).include?(year) }</tt>). The method,
-      #   proc or string should return or evaluate to a +true+ or +false+ value.
+      #   or proc should return a +true+ or +false+ value.
 
       def field(field_name, options = {}, &block)
         field_name = field_name.to_sym
-        field_definition = FieldDefinition.new
 
-        field_definition.query_updater = if block_given?
-          # TODO look for methods to validate that block returns proc
-          block
-        else
-          # AR ref
-          ->(value) { -> { where(field_name => value) } }
-        end
+        field_definition = FieldDefinition.new.tap do |fd|
+          fd.query_updater = if block_given?
+            # TODO look for methods to validate that block returns proc
+            block
+          else
+            # AR ref
+            ->(value) { -> { where(field_name => value) } }
+          end
 
-        raise Error, "'if' can't be used with 'allow_nil' or 'allow_blank'" if options[:if] && (options[:allow_nil] || options[:allow_blank])
+          raise Error, "'if' can't be used with 'allow_nil' or 'allow_blank'" if options[:if] && (options[:allow_nil] || options[:allow_blank])
 
-        field_definition.acceptance_computer = if options[:if]
-          options[:if]
-        else
-          ->(value) { (options[:allow_nil] || !value.nil?) && (options[:allow_blank] || value != "") }
-        end
+          fd.acceptance_computer = if options[:if]
+            if options[:if].is_a?(Proc)
+              options[:if]
+            elsif options[:if].is_a?(Symbol)
+              -> (value, filter) { filter.send(options[:if], value) }
+            else
+              raise Error, "Unsupported argument #{options[:if].class} for 'if'. Pass proc or method name"
+            end
+          else
+            # TODO checking that value is blank just comparing to empty string is very naive
+            ->(value) { (options[:allow_nil] || !value.nil?) && (options[:allow_blank] || value != "") }
+          end
 
-        field_definition.default_computer = if options[:default].is_a?(Proc)
-          options[:default]
-        elsif options[:default].is_a?(Symbol)
-          -> (filter) { filter.send(options[:default]) }
-        elsif options[:default]
-          -> (_) { options[:default] }
+          fd.default_computer = if options[:default].is_a?(Proc)
+            options[:default]
+          elsif options[:default].is_a?(Symbol)
+            -> (filter) { filter.send(options[:default]) }
+          elsif options[:default]
+            -> (_) { options[:default] }
+          end
         end
 
         field_definitions[field_name] = field_definition
@@ -168,10 +176,14 @@ module Filtered
     def to_proc
       procs = entitled_fields.inject([]) do |memo, (name, value, definition)|
 
-        r = if (l = definition.query_updater) == 2
+        r = if (l = definition.query_updater).arity == 2
           l.call(value, self)
-        else
+        elsif l.arity == 1
           l.call(value)
+        elsif l.arity == 0
+          l.call()
+        else
+          raise Error, "Unsupported number of arguments for #{definition}"
         end
 
         memo << r
@@ -203,7 +215,17 @@ module Filtered
       fields.each do |name, value, definition|
         value = definition.default_computer.(self) if !value && definition.default_computer
 
-        if definition.accepts_value?(value)
+        value_accepted = if (l = definition.acceptance_computer).arity == 2
+          l.call(value, self)
+        elsif l.arity == 1
+          l.call(value)
+        elsif l.arity == 0
+          l.call()
+        else
+          raise Error, "Unsupported number of arguments for #{definition}"
+        end
+
+        if value_accepted
           yield name, value, definition
         else
           next
