@@ -1,15 +1,9 @@
 [![Build Status](https://travis-ci.org/dubadub/filtered.svg?branch=master)](https://travis-ci.org/dubadub/filtered)
 
-WORK IN PROGRESS
 
+# Filtered - add filter to ActiveRecord queries
 
-# Filtered - easily add filter to ActiveRecord queries
-
-Have you ever been overwhelmed by the need to filter ActiveRecord relation in a way which doesn't align with ActiveRecord notation? In particular, use fields which aren't columns or scopes. Do you remember that feeling when you need to display filter values in a form on a page and then parse all these parameters back? Me too. That's it.
-
-Filtered gem is created to solve these problems. Forever.
-
-It gives freedom of using any names, any columns or associations behind these names. Also, it allows you to reuse queries or even compose them from reusable parts.
+It gives freedom of using any names, columns, scopes or associations behind these names. Also, it allows you to reuse queries or even compose them from reusable parts. Nice part about it is that it ingerates with Rails forms out of the box.
 
 ## Installation
 
@@ -19,28 +13,28 @@ Add this line to your application's Gemfile:
 gem "filtered"
 ```
 
-And then execute:
+And then run:
 
 ```bash
-    # Download and install the gem
+    # 1. Download and install the gem
     $ bundle
 
-    # Generate a base filter class
+    # 2. Generate a base filter class
     $ rails generate filtered:install
           create app/filters/application_filter.rb
 ```
 
 ## Usage
 
-Create a new filter by running:
+To create a new filter with a generator:
 
 ```bash
-    $ rails generate filter car make model year body # fields are optional
+    $ rails generate filter car make model year body # fields can be added later
           create app/filiters/car_filter.rb
 ```
 
 
-This is how you can use that filter in a controller:
+To use this filter in a controller:
 
 ```ruby
 # app/controllers/noise_measurements_controller.rb
@@ -69,8 +63,7 @@ end
 ```
 
 
-
-Define your filter:
+To define your filter:
 
 ```ruby
 # app/filters/car_filter.rb
@@ -119,24 +112,6 @@ class CarFilter < ApplicationFilter
   # or method name. it will pass value as an argument
   field :year, if: :year_applicable?
 
-  # here is more sofisticated example when we need to do arbitrary logic inside:
-  field :ordering do |value|
-    order_by, direction = value.split
-    # order_by, direction = value.values_at("order", "direction")
-    case order_by
-    when "year"
-      -> { joins(:specification).merge(Car::Specification.order(year: direction)) }
-    when "noise_idle"
-      -> { order("profile -> '0' #{direction}") }
-    when "noise_50"
-      -> { order("profile -> '50' #{direction}") }
-    when "noise_80"
-      -> { order("profile -> '80' #{direction}") }
-    else
-      raise "Incorrect Filter Value"
-    end
-  end
-
   private
 
   def default_year
@@ -155,7 +130,7 @@ end
 
 ```
 
-Use the same `@filter` object in views, it will set all inputs values in a form:
+To use the same `@filter` object in views (it will automatically set all the related inputs in a form):
 
 ```
 # app/views/noise_measurements/index.slim
@@ -199,6 +174,7 @@ Use the same `@filter` object in views, it will set all inputs values in a form:
     .actions
       = f.submit "Filter"
 ```
+
 
 ## Under the hood
 
