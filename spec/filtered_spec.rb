@@ -37,7 +37,7 @@ RSpec.describe Filtered do
 
           filter = MyFilter.new(status: "pending")
 
-          expect(filter.to_hash).to eq(status: "pending")
+          expect(filter).to have_filter_value(status: "pending")
         end
 
         it "works when no value present" do
@@ -47,7 +47,7 @@ RSpec.describe Filtered do
 
           filter = MyFilter.new(status: "")
 
-          expect(filter.to_hash).to eq({})
+          expect(filter).to have_filter_value({})
         end
       end
 
@@ -61,7 +61,7 @@ RSpec.describe Filtered do
 
           filter = MyFilter.new(status: "pending")
 
-          expect(filter.to_hash).to eq(status: "pending")
+          expect(filter).to have_filter_value(status: "pending")
         end
 
         it "gives access to filter instance" do
@@ -77,7 +77,7 @@ RSpec.describe Filtered do
 
           filter = MyFilter.new(status: "pending")
 
-          expect(filter.to_hash).to eq(status: "pending")
+          expect(filter).to have_filter_value(status: "pending")
         end
 
         xit "raises an error if field definition doesn't return lambda" do
@@ -105,7 +105,7 @@ RSpec.describe Filtered do
 
             filter = MyFilter.new(status: "pending")
 
-            expect(filter.to_hash).to eq({})
+            expect(filter).to have_filter_value({})
           end
 
           xit "supports 'unless: :method_name'" do
@@ -119,7 +119,7 @@ RSpec.describe Filtered do
 
             filter = MyFilter.new(status: "pending")
 
-            expect(filter.to_hash).to eq({})
+            expect(filter).to have_filter_value({})
           end
 
           it "supports 'if: ->() {...}'" do
@@ -129,7 +129,7 @@ RSpec.describe Filtered do
 
             filter = MyFilter.new(status: "pending")
 
-            expect(filter.to_hash).to eq({})
+            expect(filter).to have_filter_value({})
           end
 
           it "supports 'if: ->() {...}'" do
@@ -139,7 +139,7 @@ RSpec.describe Filtered do
 
             filter = MyFilter.new(status: "pending")
 
-            expect(filter.to_hash).to eq(status: "pending")
+            expect(filter).to have_filter_value(status: "pending")
           end
         end
 
@@ -153,7 +153,7 @@ RSpec.describe Filtered do
 
               filter = MyFilter.new(status: "")
 
-              expect(filter.to_hash).to eq(status: "")
+              expect(filter).to have_filter_value(status: "")
             end
           end
         end
@@ -167,7 +167,7 @@ RSpec.describe Filtered do
 
               filter = MyFilter.new(status: nil)
 
-              expect(filter.to_hash).to eq(status: nil)
+              expect(filter).to have_filter_value(status: nil)
             end
           end
         end
@@ -180,7 +180,7 @@ RSpec.describe Filtered do
 
             filter = MyNewFilter.new
 
-            expect(filter.to_hash).to eq(year: 2019)
+            expect(filter).to have_filter_value(year: 2019)
           end
 
           it "supports  'default' as proc" do
@@ -194,7 +194,7 @@ RSpec.describe Filtered do
               f.default_year = 2019
             end
 
-            expect(filter.to_hash).to eq(year: 2019)
+            expect(filter).to have_filter_value(year: 2019)
           end
 
           it "supports  'default' as method name" do
@@ -208,14 +208,11 @@ RSpec.describe Filtered do
 
             filter = MyNewFilter.new
 
-            expect(filter.to_hash).to eq(year: 2019)
+            expect(filter).to have_filter_value(year: 2019)
           end
         end
 
       end
-
-
-
     end
   end
 end

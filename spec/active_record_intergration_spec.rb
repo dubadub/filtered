@@ -32,7 +32,7 @@ RSpec.describe "Integration with ActiveRecord" do
   end
 
   it "doesn't modify query if filter has no values" do
-    filter = filter_class.new({})
+    filter = filter_class.new
 
     expect(Parent.all.merge(filter).to_sql).to eq("SELECT \"parents\".* FROM \"parents\"")
   end
