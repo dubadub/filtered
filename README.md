@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/dubadub/filtered.svg?branch=master)](https://travis-ci.org/dubadub/filtered)
-[![Maintainability](https://api.codeclimate.com/v1/badges/58e6805e1616fd68be56/maintainability)](https://codeclimate.com/github/dubadub/filtered/maintainability)
 
 WORK IN PROGRESS
 
