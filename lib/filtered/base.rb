@@ -1,16 +1,7 @@
 module Filtered
   class Base
 
-    def self.inherited(base)
-      base.extend ClassMethods
-      base.prepend InstanceMehods
-    end
-
     module ClassMethods
-      def self.extended(base)
-        base.class_variable_set(:"@@field_definitions", Hash.new)
-      end
-
       # Defines a field in a filter.
       #
       # When you provide no options, it will by default add a simple `where(year: ["2010", "2011"])`
@@ -118,7 +109,7 @@ module Filtered
       end
 
       def field_definitions
-        class_variable_get(:"@@field_definitions")
+        instance_variable_get(:"@field_definitions")
       end
     end
 
@@ -134,6 +125,21 @@ module Filtered
       def fields
         @field_set
       end
+    end
+
+    extend ClassMethods
+    prepend InstanceMehods
+
+    def self.inherited(base)
+      base.instance_variable_set(:"@field_definitions", Hash.new)
+
+      if field_definitions
+        field_definitions.each do |(name, definition)|
+          base.field_definitions[name] = definition
+        end
+      end
+
+      super
     end
 
     # Initializes a new filter with the given +params+.

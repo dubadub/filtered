@@ -16,8 +16,29 @@ RSpec.describe Filtered do
       filter_one = FilterOne.new(status: "pending")
       filter_two = FilterTwo.new(reason: "pending")
 
-      expect(filter_one.to_hash).to eq(status: "pending")
-      expect(filter_two.to_hash).to eq(reason: "pending")
+      expect(filter_one).to have_filter_value(status: "pending")
+      expect(filter_two).to have_filter_value(reason: "pending")
+    end
+
+    it "doesn't clash with other class with common ancestor" do
+      class FilterBase < Filtered::Base
+        field :base_status, default: "pending"
+        field :base_reason, default: "N/A"
+      end
+
+      class Filter1 < FilterBase
+        field :status, default: "hello"
+      end
+
+      class Filter2 < FilterBase
+        field :reason, default: "because"
+      end
+
+      filter_one = Filter1.new
+      filter_two = Filter2.new
+
+      expect(filter_one).to have_filter_value(status: "hello", base_status: "pending", base_reason: "N/A")
+      expect(filter_two).to have_filter_value(reason: "because", base_status: "pending", base_reason: "N/A")
     end
 
     it "blows up when setting field which is not defined" do
