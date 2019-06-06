@@ -50,7 +50,7 @@ class NoiseMeasurementsController < ApplicationController
 
   def set_filter
     # it can take an optional block if you need to set an auxilary variable:
-    @filter = CarsFilter.new(filter_params) do |f|
+    @filter = CarFilter.new(filter_params) do |f|
       f.user = current_user
     end
   end
