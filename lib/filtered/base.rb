@@ -73,20 +73,33 @@ module Filtered
             ->(value) { -> { where(field_name => value) } }
           end
 
+
           raise Error, "'if' can't be used with 'allow_nil' or 'allow_blank'" if options[:if] && (options[:allow_nil] || options[:allow_blank])
 
-          fd.acceptance_computer = if options[:if]
-            if options[:if].is_a?(Proc)
-              options[:if]
-            elsif options[:if].is_a?(Symbol)
-              -> (value, filter) { filter.send(options[:if], value) }
-            else
-              raise Error, "Unsupported argument #{options[:if].class} for 'if'. Pass proc or method name"
-            end
-          else
+          fd.acceptance_computer = if options[:if].is_a?(Proc)
+            options[:if]
+          elsif options[:if].is_a?(Symbol)
+            -> (value, filter) { filter.send(options[:if], value) }
+          elsif options[:if].nil?
             # TODO checking that value is blank just comparing to empty string is very naive
             ->(value) { (options[:allow_nil] || !value.nil?) && (options[:allow_blank] || value != "") }
+          else
+            raise Error, "Unsupported argument #{options[:if].class} for 'if'. Pass proc or method name"
           end
+
+
+          raise Error, "'unless' can't be used with 'allow_nil' or 'allow_blank'" if options[:unless] && (options[:allow_nil] || options[:allow_blank])
+
+          fd.decline_computer = if options[:unless].is_a?(Proc)
+            options[:unless]
+          elsif options[:unless].is_a?(Symbol)
+            -> (value, filter) { filter.send(options[:unless], value) }
+          elsif options[:unless].nil?
+            -> { false }
+          else
+            raise Error, "Unsupported argument #{options[:unless].class} for 'unless'. Pass proc or method name"
+          end
+
 
           fd.default_computer = if options[:default].is_a?(Proc)
             options[:default]
@@ -222,10 +235,20 @@ module Filtered
         elsif l.arity == 0
           l.call()
         else
-          raise Error, "Unsupported number of arguments for #{definition}"
+          raise Error, "Unsupported number of arguments for 'if' in #{definition}"
         end
 
-        if value_accepted
+        value_declined = if (l = definition.decline_computer).arity == 2
+          l.call(value, self)
+        elsif l.arity == 1
+          l.call(value)
+        elsif l.arity == 0
+          l.call()
+        else
+          raise Error, "Unsupported number of arguments for 'unless' #{definition}"
+        end
+
+        if value_accepted && !value_declined
           yield name, value, definition
         else
           next

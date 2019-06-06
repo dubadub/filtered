@@ -122,20 +122,6 @@ RSpec.describe Filtered do
             expect(filter).to have_filter_value({})
           end
 
-          xit "supports 'unless: :method_name'" do
-            class MyFilter < Filtered::Base
-              field :status, unless: :skip_field?
-
-              def skip_field?
-                true
-              end
-            end
-
-            filter = MyFilter.new(status: "pending")
-
-            expect(filter).to have_filter_value({})
-          end
-
           it "supports 'if: ->() {...}'" do
             class MyFilter < Filtered::Base
               field :status, if: ->() { false }
@@ -174,6 +160,140 @@ RSpec.describe Filtered do
             filter = MyFilter.new(status: "pending")
 
             expect(filter).to have_filter_value(status: "pending")
+          end
+
+          it "blows up when 'if' used with 'allow_blank'" do
+            expect {
+              class MyFilter < Filtered::Base
+                field :status, if: -> { true }, allow_blank: true
+              end
+            }.to raise_error(/'if' can't be used with 'allow_nil' or 'allow_blank'/)
+          end
+
+          it "blows up when 'if' used with 'allow_nil'" do
+            expect {
+              class MyFilter < Filtered::Base
+                field :status, if: -> { true }, allow_nil: true
+              end
+            }.to raise_error(/'if' can't be used with 'allow_nil' or 'allow_blank'/)
+          end
+        end
+
+        describe "unless: ..." do
+          it "supports 'unless: :method_name'" do
+            class MyIfFilter < Filtered::Base
+              field :status, unless: :use_field?
+
+              def use_field?(value)
+                value != "pending"
+              end
+            end
+
+            filter = MyIfFilter.new(status: "pending")
+
+            expect(filter).to have_filter_value(status: "pending")
+          end
+
+          it "supports 'unless: :method_name'" do
+            class MyIfFilter < Filtered::Base
+              field :status, unless: :use_field?
+
+              def use_field?(value)
+                value == "pending"
+              end
+            end
+
+            filter = MyIfFilter.new(status: "pending")
+
+            expect(filter).to have_filter_value({})
+          end
+
+          it "supports 'unless: ->() {...}'" do
+            class MyFilter < Filtered::Base
+              field :status, unless: ->() { true }
+            end
+
+            filter = MyFilter.new(status: "pending")
+
+            expect(filter).to have_filter_value({})
+          end
+
+          it "supports 'unless: ->() {...}'" do
+            class MyFilter < Filtered::Base
+              field :status, unless: ->() { false }
+            end
+
+            filter = MyFilter.new(status: "pending")
+
+            expect(filter).to have_filter_value(status: "pending")
+          end
+
+          it "supports 'unless: ->(value) {...}'" do
+            class MyFilter < Filtered::Base
+              field :status, unless: ->(value) { value }
+            end
+
+            filter = MyFilter.new(status: "pending")
+
+            expect(filter).to have_filter_value({})
+          end
+
+          it "supports 'unless: ->(value) {...}'" do
+            class MyFilter < Filtered::Base
+              field :status, unless: ->(value) { !value }
+            end
+
+            filter = MyFilter.new(status: "pending")
+
+            expect(filter).to have_filter_value(status: "pending")
+          end
+
+          it "blows up when 'unless' used with 'allow_blank'" do
+            expect {
+              class MyFilter < Filtered::Base
+                field :status, unless: -> { true }, allow_blank: true
+              end
+            }.to raise_error(/'unless' can't be used with 'allow_nil' or 'allow_blank'/)
+          end
+
+          it "blows up when 'unless' used with 'allow_nil'" do
+            expect {
+              class MyFilter < Filtered::Base
+                field :status, unless: -> { true }, allow_nil: true
+              end
+            }.to raise_error(/'unless' can't be used with 'allow_nil' or 'allow_blank'/)
+          end
+        end
+
+        context "'if' and 'unless' in the same time" do
+          it "allows when both evaluate to permit field" do
+            class MyFilter < Filtered::Base
+              field :status, if: -> { true }, unless: -> { false }
+            end
+
+            filter = MyFilter.new(status: "pending")
+
+            expect(filter).to have_filter_value(status: "pending")
+          end
+
+          it "declines when 'unless' evaluates to disable field" do
+            class MyFilter < Filtered::Base
+              field :status, if: -> { true }, unless: -> { true }
+            end
+
+            filter = MyFilter.new(status: "pending")
+
+            expect(filter).to have_filter_value({})
+          end
+
+          it "declines when 'if' evaluates to disable field" do
+            class MyFilter < Filtered::Base
+              field :status, if: -> { false }, unless: -> { false }
+            end
+
+            filter = MyFilter.new(status: "pending")
+
+            expect(filter).to have_filter_value({})
           end
         end
 
