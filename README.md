@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/dubadub/filtered.svg?branch=master)](https://travis-ci.org/dubadub/filtered)
+[![Gem Version](https://badge.fury.io/rb/filtered.svg)](https://badge.fury.io/rb/filtered)[![Build Status](https://travis-ci.org/dubadub/filtered.svg?branch=master)](https://travis-ci.org/dubadub/filtered)
 
 
 # Filtered - add filter to ActiveRecord queries
