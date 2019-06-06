@@ -41,6 +41,41 @@ RSpec.describe Filtered do
       expect(filter_two).to have_filter_value(reason: "because", base_status: "pending", base_reason: "N/A")
     end
 
+    it "doesn't clash with other class with common ancestor" do
+      module FilterMixin1
+        def self.included(base)
+          base.field :status, default: "hello"
+        end
+      end
+
+      module FilterMixin2
+        def self.included(base)
+          base.field :reason, default: "because"
+        end
+      end
+
+      class FilterBase < Filtered::Base
+        field :base_status, default: "pending"
+        field :base_reason, default: "N/A"
+      end
+
+      class Filter1 < FilterBase
+        include FilterMixin1
+      end
+
+      class Filter2 < FilterBase
+        include FilterMixin2
+
+        field :filter_two_own_field, default: "today"
+      end
+
+      filter_one = Filter1.new
+      filter_two = Filter2.new
+
+      expect(filter_one).to have_filter_value(status: "hello", base_status: "pending", base_reason: "N/A")
+      expect(filter_two).to have_filter_value(reason: "because", base_status: "pending", base_reason: "N/A", filter_two_own_field: "today")
+    end
+
     it "blows up when setting field which is not defined" do
       class MyFilter < Filtered::Base
         field :status

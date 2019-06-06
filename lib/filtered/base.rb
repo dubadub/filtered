@@ -221,7 +221,7 @@ module Filtered
     end
 
     def inspect
-      inspection = fields.collect { |name, value| "#{name}: #{value.inspect}" }.compact.join(", ")
+      inspection = entitled_fields.collect { |name, value| "#{name}: #{value.inspect}" }.compact.join(", ")
 
       "#<#{self.class} #{inspection}>"
     end
