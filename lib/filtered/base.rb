@@ -65,18 +65,26 @@ module Filtered
         field_name = field_name.to_sym
         field_definition = FieldDefinition.new
 
-        field_definition.accept_if = if options[:if]
+        field_definition.query_updater = if block_given?
+          # TODO look for methods to validate that block returns proc
+          block
+        else
+          # AR ref
+          ->(value) { -> { where(field_name => value) } }
+        end
+
+        field_definition.acceptance_computer = if options[:if]
           options[:if]
         else
           ->(value) { !value.nil? && value != "" }
         end
 
-        field_definition.query_update_proc = if block_given?
-          # TODO look for methods to validate that block returns proc
-          block
-        else
-          # AR
-          ->(value) { -> { where(field_name => value) } }
+        field_definition.default_computer = if options[:default].is_a?(Proc)
+          options[:default]
+        elsif options[:default].is_a?(Symbol)
+          -> (filter) { filter.send(options[:default]) }
+        elsif options[:default]
+          -> (_) { options[:default] }
         end
 
         field_definitions[field_name] = field_definition
@@ -97,6 +105,8 @@ module Filtered
 
         super
       end
+
+      private
 
       def fields
         @field_set
@@ -139,7 +149,7 @@ module Filtered
     #       params.fetch(:filter, {}).permit(make: [], model: [], year: [], body: [])
     #     end
     #  end
-    def initialize(params, &block)
+    def initialize(params = {}, &block)
       params.each do |name, value|
         name = name.to_sym
 
@@ -151,20 +161,18 @@ module Filtered
       yield self if block_given?
     end
 
+
+    # ActiveRecord calls to_proc when filter merged into relation.
     def to_proc
-      procs = fields.inject([]) do |memo, (name, value, definition)|
+      procs = entitled_fields.inject([]) do |memo, (name, value, definition)|
 
-        if definition.accepts_value?(value)
-          lambda = definition.to_proc
-
-          value = if lambda.arity == 2
-            lambda.call(value, self)
-          else
-            lambda.call(value)
-          end
-
-          memo << value
+        r = if (l = definition.query_updater) == 2
+          l.call(value, self)
+        else
+          l.call(value)
         end
+
+        memo << r
 
         memo
       end
@@ -176,19 +184,29 @@ module Filtered
     end
 
     def to_hash
-      active_fields_with_values = fields.map do |name, value, definition|
-        next unless definition.accepts_value?(value)
-
-        [name, value]
-      end
-
-      Hash[active_fields_with_values.compact]
+      Hash[entitled_fields.map { |name, value| [name, value] }]
     end
 
     def inspect
       inspection = fields.collect { |name, value| "#{name}: #{value.inspect}" }.compact.join(", ")
 
       "#<#{self.class} #{inspection}>"
+    end
+
+    private
+
+    def entitled_fields
+      return enum_for(:entitled_fields) unless block_given?
+
+      fields.each do |name, value, definition|
+        value = definition.default_computer.(self) if !value && definition.default_computer
+
+        if definition.accepts_value?(value)
+          yield name, value, definition
+        else
+          next
+        end
+      end
     end
 
   end

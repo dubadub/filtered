@@ -1,14 +1,10 @@
 module Filtered
   class FieldDefinition
 
-    attr_writer :query_update_proc, :accept_if
+    attr_accessor :query_updater, :acceptance_computer, :default_computer
 
     def accepts_value?(value)
-      @accept_if.call(value)
-    end
-
-    def to_proc
-      @query_update_proc
+      @acceptance_computer.call(value)
     end
 
   end

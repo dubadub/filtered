@@ -156,6 +156,46 @@ RSpec.describe Filtered do
           end
         end
 
+        describe "default: ..." do
+          it "supports 'default' as value" do
+            class MyNewFilter < Filtered::Base
+              field :year, default: 2019
+            end
+
+            filter = MyNewFilter.new
+
+            expect(filter.to_hash).to eq(year: 2019)
+          end
+
+          it "supports  'default' as proc" do
+            class MyNewFilter < Filtered::Base
+              attr_accessor :default_year
+
+              field :year, default: ->(filter) { filter.default_year }
+            end
+
+            filter = MyNewFilter.new do |f|
+              f.default_year = 2019
+            end
+
+            expect(filter.to_hash).to eq(year: 2019)
+          end
+
+          it "supports  'default' as method name" do
+            class MyNewFilter < Filtered::Base
+              field :year, default: :default_year
+
+              def default_year
+                2019
+              end
+            end
+
+            filter = MyNewFilter.new
+
+            expect(filter.to_hash).to eq(year: 2019)
+          end
+        end
+
       end
 
 
