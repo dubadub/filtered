@@ -3,7 +3,7 @@
 
 # Filtered - add filter to ActiveRecord queries
 
-It gives freedom of using any names, columns, scopes or associations behind fields. Also, it allows you to reuse queries or even compose them from reusable parts. What's really handy is that it integrates with Rails forms out of the box.
+The gem helps to create filters for Rails’ ActiveRecord in an old-fashion way. It makes your controller simpler and forms effortless.
 
 ## Installation
 
