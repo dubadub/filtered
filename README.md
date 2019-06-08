@@ -30,7 +30,7 @@ To create a new filter with a generator:
 
 ```bash
     $ rails generate filter car make model year body # fields can be added later
-          create app/filiters/car_filter.rb
+          create app/filters/car_filter.rb
 ```
 
 
