@@ -180,6 +180,11 @@ To use the same `@filter` object in views (it will automatically set all the rel
 
 Filtered uses API provided by ActiveRecord [merge method](https://api.rubyonrails.org/classes/ActiveRecord/SpawnMethods.html#method-i-merge). There are a few open issues in ActiveRecord related to that method, please, have a look through it [here](https://github.com/rails/rails/search?q=activerecord+merge&state=open&type=Issues).
 
+## Ruby/Rails versions supported
+
+Ruby: 2.2.x, 2.3.x, 2.4.x, 2.5.x, 2.6.x, jruby-9.1.x, jruby-9.2.x.
+Rails: 4.0.x, 4.1.x, 4.2.x, 5.0.x, 5.1.x, 5.2.x, 6.0.0rc.
+
 ## Credits
 
 This gem woudn't exist without original ideas of [@caJaeger](https://github.com/caJaeger).
