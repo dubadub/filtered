@@ -391,6 +391,7 @@ RSpec.describe Filtered do
             filter = MyNewFilter.new
 
             expect(filter).to have_filter_value(year: 2019)
+            expect(filter.year).to eq(2019)
           end
 
           it "supports  'default' as proc" do
@@ -405,6 +406,7 @@ RSpec.describe Filtered do
             end
 
             expect(filter).to have_filter_value(year: 2019)
+            expect(filter.year).to eq(2019)
           end
 
           it "supports  'default' as method name" do
@@ -419,6 +421,7 @@ RSpec.describe Filtered do
             filter = MyNewFilter.new
 
             expect(filter).to have_filter_value(year: 2019)
+            expect(filter.year).to eq(2019)
           end
         end
 

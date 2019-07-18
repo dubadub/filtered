@@ -188,6 +188,12 @@ module Filtered
       end
 
       yield self if block_given?
+
+      fields.each do |name, value, definition|
+        next if value || !definition.default_computer
+
+        fields[name] = definition.default_computer.(self)
+      end
     end
 
 
@@ -221,8 +227,6 @@ module Filtered
       return enum_for(:entitled_fields) unless block_given?
 
       fields.each do |name, value, definition|
-        value = definition.default_computer.(self) if !value && definition.default_computer
-
         value_accepted = eval_option_proc(definition.acceptance_computer, value)
         value_declined = eval_option_proc(definition.decline_computer, value)
 
