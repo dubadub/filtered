@@ -1,4 +1,4 @@
-appraise "activerecord-6.0rc1" do
+appraise "activerecord-6.0" do
   gem "activerecord", "~>6.0.0.rc1", require: "active_record"
   gem "generator_spec"
 

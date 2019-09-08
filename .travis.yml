@@ -24,7 +24,7 @@ gemfile:
   - gemfiles/activerecord_5.0.gemfile
   - gemfiles/activerecord_5.1.gemfile
   - gemfiles/activerecord_5.2.gemfile
-  - gemfiles/activerecord_6.0rc1.gemfile
+  - gemfiles/activerecord_6.0.gemfile
 env:
   - DB=sqlite
   - DB=postgres
@@ -33,19 +33,19 @@ matrix:
   fast_finish: true
   exclude:
   - rvm: 2.2.6
-    gemfile: gemfiles/activerecord_6.0rc1.gemfile
+    gemfile: gemfiles/activerecord_6.0.gemfile
   - rvm: 2.3.7
-    gemfile: gemfiles/activerecord_6.0rc1.gemfile
+    gemfile: gemfiles/activerecord_6.0.gemfile
   - rvm: 2.4.2
-    gemfile: gemfiles/activerecord_6.0rc1.gemfile
+    gemfile: gemfiles/activerecord_6.0.gemfile
   - rvm: jruby-9.1.9.0
     gemfile: gemfiles/activerecord_5.0.gemfile
   - rvm: jruby-9.1.9.0
-    gemfile: gemfiles/activerecord_6.0rc1.gemfile
+    gemfile: gemfiles/activerecord_6.0.gemfile
   - rvm: jruby-9.2.5.0
     gemfile: gemfiles/activerecord_5.0.gemfile
   - rvm: jruby-9.2.5.0
-    gemfile: gemfiles/activerecord_6.0rc1.gemfile
+    gemfile: gemfiles/activerecord_6.0.gemfile
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
