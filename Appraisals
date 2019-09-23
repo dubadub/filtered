@@ -19,7 +19,7 @@ appraise "activerecord-5.2" do
   gem "generator_spec"
 
   gemfile.platforms :jruby do
-    gem "activerecord-jdbcsqlite3-adapter"
+    gem "activerecord-jdbcsqlite3-adapter", "~> 52.1"
     gem "jdbc-sqlite3"
     gem "jdbc-postgres"
   end
@@ -35,7 +35,7 @@ appraise "activerecord-5.1" do
   gem "generator_spec"
 
   gemfile.platforms :jruby do
-    gem "activerecord-jdbcsqlite3-adapter"
+    gem "activerecord-jdbcsqlite3-adapter", "~> 52.1"
     gem "jdbc-sqlite3"
     gem "jdbc-postgres"
   end
@@ -51,7 +51,7 @@ appraise "activerecord-5.0" do
   gem "generator_spec"
 
   gemfile.platforms :jruby do
-    gem "activerecord-jdbcsqlite3-adapter"
+    gem "activerecord-jdbcsqlite3-adapter", "~> 52.1"
     gem "jdbc-sqlite3"
     gem "jdbc-postgres"
   end
