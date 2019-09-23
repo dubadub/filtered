@@ -5,7 +5,7 @@ cache: bundler
 addons:
   postgresql: "9.6"
 language: ruby
-jdk: oraclejdk8
+jdk: openjdk8
 rvm:
   # TODO fix build set up
   # - 2.0.0-p648
