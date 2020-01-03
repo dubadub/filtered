@@ -50,6 +50,17 @@ matrix:
     gemfile: gemfiles/activerecord_5.0.gemfile
   - rvm: jruby-9.2.5.0
     gemfile: gemfiles/activerecord_6.0.gemfile
+  - rvm: 2.2.6
+    gemfile: gemfiles/activerecord_6.0.2.1.gemfile
+  - rvm: 2.3.7
+    gemfile: gemfiles/activerecord_6.0.2.1.gemfile
+  - rvm: 2.4.2
+    gemfile: gemfiles/activerecord_6.0.2.1.gemfile
+  - rvm: jruby-9.1.9.0
+    gemfile: gemfiles/activerecord_6.0.2.1.gemfile
+  - rvm: jruby-9.2.5.0
+    gemfile: gemfiles/activerecord_6.0.2.1.gemfile
+
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
