@@ -1,3 +1,19 @@
+appraise "activerecord-6.0.2.1" do
+  gem "activerecord", "~>6.0.2.1", require: "active_record"
+  gem "generator_spec"
+
+  platforms :jruby do
+    gem "activerecord-jdbcsqlite3-adapter"
+    gem "jdbc-sqlite3"
+    gem "jdbc-postgres"
+  end
+
+  platforms :ruby, :mswin, :mingw do
+    gem "pg", "~> 1.1.4"
+    gem "sqlite3", "~> 1.4.0"
+  end
+end
+
 appraise "activerecord-6.0" do
   gem "activerecord", "~>6.0.0.rc1", require: "active_record"
   gem "generator_spec"

@@ -15,6 +15,7 @@ rvm:
   - 2.4.2
   - 2.5.1
   - 2.6.3
+  - 2.7.0
   - ruby-head
   - jruby-9.1.9.0
   - jruby-9.2.5.0
@@ -27,6 +28,7 @@ gemfile:
   - gemfiles/activerecord_5.1.gemfile
   - gemfiles/activerecord_5.2.gemfile
   - gemfiles/activerecord_6.0.gemfile
+  - gemfiles/activerecord_6.0.2.1.gemfile
 env:
   - DB=sqlite
   - DB=postgres
